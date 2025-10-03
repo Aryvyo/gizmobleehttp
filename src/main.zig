@@ -37,12 +37,6 @@ fn workerFn() !void {
     try posix.bind(f, &address.any, address.getOsSockLen());
     try posix.listen(f, 8192);
 
-    const epoll = try posix.epoll_create1(posix.system.EPOLL.CLOEXEC);
-    defer posix.close(epoll);
-
-    var listenevent = posix.system.epoll_event{ .events = posix.system.EPOLL.IN | posix.system.EPOLL.ET, .data = .{ .fd = f } };
-    try posix.epoll_ctl(epoll, posix.system.EPOLL.CTL_ADD, f, &listenevent);
-
     const httpheader =
         "HTTP/1.1 200 OK\r\n" ++ "Content-Type: text/html; charset=utf-8\r\n" ++ "Content-Length: 49\r\n" ++ "Connection: close\r\n" ++ "\r\n" ++ "<html><body><h1>CORE CHALLENGE</h1></body></html>";
 
